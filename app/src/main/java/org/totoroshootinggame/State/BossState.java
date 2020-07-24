@@ -1,33 +1,111 @@
 package org.totoroshootinggame.State;
 
 import android.graphics.Canvas;
-import android.view.MotionEvent;
 
-import org.framework.IState;
+import org.DB.RankingDAO;
+import org.framework.AppManager;
+import org.framework.GraphicObject;
+import org.totoroshootinggame.GameObject.BackGround;
+import org.totoroshootinggame.GameObject.CloudLayer;
+import org.totoroshootinggame.CollisionManager;
+import org.totoroshootinggame.Enemy.Boss;
+import org.totoroshootinggame.Enemy.Enemy;
+import org.totoroshootinggame.GameObject.Item;
+import org.totoroshootinggame.GameObject.Missile;
+import org.totoroshootinggame.R;
 
-public class BossState implements IState {
+public class BossState extends GameState {
+
+    Boss boss;
+
     @Override
-    public void Init() {
+    public void MakeEnemy() {
 
     }
 
     @Override
-    public void Destroy() {
-
+    public void Init() {
+        backGround = new BackGround(1);
+        boss = new Boss(AppManager.getInstance( ).getBitmap(R.drawable.boss1));
+        player = AppManager.getInstance().player;
+        AppManager.getInstance().player_state = player;
+        cloudLayer = new CloudLayer();
+        for(int heart = 0 ; heart < player.getLife();heart++)
+            insertHeart(heart);
     }
 
     @Override
     public void Update() {
-
+        super.Update();
+        boss.update();
     }
 
     @Override
     public void Render(Canvas canvas) {
+        // 구름 디버프 시간 확인
+        if(System.currentTimeMillis( ) > LastCloudTime + 5000){
+            isCloudFront = false;
+            LastCloudTime = 0;
+        }
 
+        if(isCloudFront){
+            // 구름 앞으로 나옴
+            backGround.Draw(canvas);
+            for (Missile pms : m_pmslist) pms.Draw(canvas);
+            for (Enemy enem : m_enemlist) enem.Draw(canvas);
+            for (Item item : m_itemlist) item.Draw(canvas);
+            for (GraphicObject heart:heartlist) heart.Draw(canvas);
+            cloudLayer.Draw(canvas);
+            player.Draw(canvas);
+            boss.Draw(canvas);
+        }
+        else{
+            // 구름 백그라운드로 이동
+            backGround.Draw(canvas);
+            cloudLayer.Draw(canvas);
+            for (Missile pms : m_pmslist) pms.Draw(canvas);
+            for (Enemy enem : m_enemlist) enem.Draw(canvas);
+            for (Item item : m_itemlist) item.Draw(canvas);
+            for (GraphicObject heart:heartlist) heart.Draw(canvas);
+            boss.Draw(canvas);
+            player.Draw(canvas);
+        }
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return false;
+    public void MakeItem() {
+        if (System.currentTimeMillis( ) - LastItemTime >= 3000) {
+            LastItemTime = System.currentTimeMillis( );
+            Item item = getItem();
+            item.setPosition( randEnem.nextInt(AppManager.getInstance().getDisplayWidth() - 200) + 10,boss.getBitmapHeight() + 100 + AppManager.getInstance().topBar);
+            m_itemlist.add(item);
+        }
+    }
+
+    @Override
+    public void CheckCollision() {
+        super.CheckCollision();
+        if (CollisionManager.CheckBoxToBox(player.m_BoundBox, boss.m_BoundBox)) {
+            if(player .destroyPlayer( )) heartlist.remove(heartlist.size() - 1);   //***
+            if(player.playerType() == Item.STATE_NORMAL) vibrator.vibrate(100);
+            if ( player.getLife( ) <= 0 )
+            {
+                RankingDAO.getInstance(AppManager.getInstance().getGameView().getContext()).insert(player.getPoint());
+                AppManager.getInstance().getGameView().endTurn = true;
+            }
+        }
+
+        for (int i = m_pmslist.size() - 1; i >= 0; i--)
+        {
+            if (CollisionManager.CheckBoxToBox(m_pmslist.get(i).m_BoundBox , boss.m_BoundBox))
+            {
+                m_pmslist.remove(i);
+                boss.destroyBoss();
+                player.addPoint();
+                if(boss.getBossHp() == 0)
+                    AppManager.getInstance().getGameView().endTurn = true;
+            }
+        }
+
     }
 }
