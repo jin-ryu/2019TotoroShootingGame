@@ -53,11 +53,13 @@ public class Enemy extends GraphicObject {
             }
         }
 
-        if(m_x < 0 ) movetype = MOVE_PATTERN_2;
-        else if(m_x + getBitmapWidth() >= AppManager.getInstance().getDisplayWidth()) movetype = MOVE_PATTERN_3;
+        if(m_x < 0 )
+            movetype = MOVE_PATTERN_2;
+        else if(m_x + getBitmapWidth() >= AppManager.getInstance().getDisplayWidth())
+            movetype = MOVE_PATTERN_3;
 
-        if (m_y > AppManager.getInstance().getDisplayHeight()) state = STATE_OUT;
-
+        if (m_y > AppManager.getInstance().getDisplayHeight())
+            state = STATE_OUT;
     }
 
     public int getEnemyType()

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.totoroshootinggame" >
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name="org.framework.GameActivity" >
+        <activity android:name="org.framework.IntroActivity"
+            android:label="토토로의 여행"
+            android:icon="@drawable/totoro_normal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,8 +20,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="org.framework.GameActivity"/>
+        <activity android:name="org.framework.RankingActivity"/>
         <!-- 팝업 Activity -->
-        <activity android:name=".PopUpActivity" android:theme="@style/popUpTheme" android:screenOrientation="portrait"/>
+        <activity android:name="org.framework.PopUpActivity" android:theme="@style/popUpTheme"/>
 
     </application>
 

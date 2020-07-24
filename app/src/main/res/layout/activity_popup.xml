@@ -52,6 +52,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp">
+        <TextView
+            android:text="예"
+            android:textSize="12sp"
+            android:textColor="#000080"
+            android:padding="15dp"
+            android:onClick="yesPressed"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="20dp"/>
 
         <TextView
             android:text="아니오"
@@ -60,17 +69,7 @@
             android:padding="15dp"
             android:onClick="noPressed"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginRight="20dp"/>
-
-        <TextView
-            android:text="예"
-            android:textSize="12sp"
-            android:textColor="#000080"
-            android:padding="15dp"
-            android:onClick="yesPressed"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+            android:layout_width="wrap_content" />
 
     </LinearLayout>
     <!--// 닫기 버튼 -->

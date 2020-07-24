@@ -1,26 +1,22 @@
 package org.framework;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
-import org.totoroshootinggame.PopUpActivity;
 import org.totoroshootinggame.R;
 
 public class GameActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager sensorManager;
-    private Sensor gyroScopeSensor, accelSensor, sensor;
+    private Sensor sensor;
+
+    boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +25,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         //센서
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensorManager.registerListener(this, gyroScopeSensor,SensorManager.SENSOR_DELAY_GAME);
-        gyroScopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
         // AppManager에 저장
         AppManager.getInstance().setWindowManager(getWindowManager());
         AppManager.getInstance().setSensorManager(sensorManager);
-        AppManager.getInstance().setGyroScopeSensor(gyroScopeSensor);
     }
 
     @Override
@@ -46,15 +40,18 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onBackPressed() {
+        SoundManager.getInstance().playSoundEffect(this, R.raw.effect1, 1);
         Intent intent = new Intent(this, PopUpActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         // 리스너 등록
-        sensorManager.registerListener(this, gyroScopeSensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+
     }
 
     @Override
@@ -70,7 +67,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-
+        AppManager.getInstance().player_state.onSensorChanged(sensorEvent);
     }
 
     @Override
