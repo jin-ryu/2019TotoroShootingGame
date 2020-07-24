@@ -1,5 +1,6 @@
 # 2019TotoroShootingGame
-2019 여름계절학기 모바일 응용설계 프로젝트
+2019 여름 계절학기 모바일 응용설계 프로젝트
+
 ![슬라이드1](https://user-images.githubusercontent.com/45402031/88419564-6232e780-ce20-11ea-8fd8-51e2ee09fa3d.PNG)
 ![슬라이드2](https://user-images.githubusercontent.com/45402031/88419566-62cb7e00-ce20-11ea-8eda-a4d0037a7e01.PNG)
 ![슬라이드3](https://user-images.githubusercontent.com/45402031/88419568-63641480-ce20-11ea-8ca1-6141cef7d871.PNG)
