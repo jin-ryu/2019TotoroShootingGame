@@ -10,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name="org.framework.IntroActivity" >
+        <activity android:name="org.framework.IntroActivity"
+            android:label="토토로의 여행"
+            android:icon="@drawable/totoro_normal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

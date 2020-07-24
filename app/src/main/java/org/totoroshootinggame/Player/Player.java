@@ -10,13 +10,15 @@ import android.view.MotionEvent;
 
 import org.framework.AppManager;
 import org.framework.GraphicObject;
+import org.framework.SoundManager;
 import org.totoroshootinggame.GameObject.Item;
 import org.totoroshootinggame.GameObject.Missile;
 import org.totoroshootinggame.R;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Player extends GraphicObject implements SensorEventListener, IPlayerState {
+public class Player extends GraphicObject implements SensorEventListener{
     public Rect m_BoundBox = new Rect();
     private int m_Life = 3; //목숨 세개
     private int playerPoint;
@@ -44,10 +46,8 @@ public class Player extends GraphicObject implements SensorEventListener, IPlaye
         m_bitmap = Bitmap.createScaledBitmap(normal, 200, 300, false);
     }
 
-    @Override
-    public void addLife() { m_Life++; }
+    public void addLife() { if(m_Life == 5 ) return;  m_Life++; }
 
-    @Override
     public boolean destroyPlayer() {
 
         if(System.currentTimeMillis() > lastDestory + 500) {
@@ -58,13 +58,10 @@ public class Player extends GraphicObject implements SensorEventListener, IPlaye
         return  false;
     }
 
-    @Override
     public int getLife() { return m_Life; }
 
-    @Override
     public void addPoint(){ playerPoint++;}
 
-    @Override
     public int getPoint(){return playerPoint;}
 
     public void Update() {
@@ -88,31 +85,28 @@ public class Player extends GraphicObject implements SensorEventListener, IPlaye
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
 
-    @Override
-    public void onTouchEvent(MotionEvent event, ArrayList<Missile> m_pmslist) {
+    public void onTouchEvent(MotionEvent event, CopyOnWriteArrayList<Missile> m_pmslist) {
 
         int x = getX();
         int y = getY();
 
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             if(System.currentTimeMillis() < lastMissile + 333) return;
+            SoundManager.getInstance().playSoundEffect(AppManager.getInstance().getGameView().getContext(),R.raw.effect2, 1);
             Missile missile = new Missile();
-            missile.setPosition(x + missile.getBitmapWidth()/2, y);
+            missile.setPosition(x + missile.getBitmapWidth()/2, y);  //미사일 좌표
             m_pmslist.add(missile);
         }
 
         lastMissile = System.currentTimeMillis();
     }
 
-    @Override
     public boolean isChangeType() {
         return false;
     }
 
-    @Override
     public int playerType() {
         return Item.STATE_NORMAL;
     }

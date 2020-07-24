@@ -33,14 +33,14 @@ class BossPattern1 implements IBossState {
     }
 
     @Override
-    public boolean isChangeTime()
+    public boolean isChangeTime()  // 패턴 바꿀 타이밍 체크.
     {
         if(attackTime == 4) return true;
         return  false;
     }
 
     @Override
-    public void Attack() {
+    public void Attack() {  // Enemy1  생성.
 
         if (System.currentTimeMillis( ) - LastRegenEnemy >= 3000) {
 
@@ -62,7 +62,7 @@ class BossPattern1 implements IBossState {
     }
 
     @Override
-    public IBossState GetAnotherState()
+    public IBossState GetAnotherState()  //다음 패턴 반환
     {
         if(AppManager.getInstance().bossState3 == null)
             AppManager.getInstance().bossState3 = new BossPattern3(boss);
@@ -71,13 +71,13 @@ class BossPattern1 implements IBossState {
     }
 }
 
-class BossPattern2 implements IBossState
+class BossPattern2 implements IBossState  //보스 패턴2
 {
     Boss boss;
     long LastRegenEnemy;
     int attackTime;
     int d_x = 0;
-    int d_y = 16;
+    int d_y = 20;
 
     public BossPattern2(Boss _boss)
     {
@@ -102,15 +102,15 @@ class BossPattern2 implements IBossState
     @Override
     public void Attack() {
 
-        if(boss.getY() == AppManager.getInstance().topBar) {
+        if(boss.getY() == AppManager.getInstance().topBar) {  // 보스 위치가 최 상단일 때
 
-            ++attackTime;
-            d_y = 16;
+            ++attackTime;  // 카운트
+            d_y = 20;    // 스피드 체크
 
         }
 
         boss.movePosition(0, d_y);
-        if(boss.getY() > 3*AppManager.getInstance().getDisplayHeight()/4) d_y *= -1;
+        if(boss.getY() > 3*AppManager.getInstance().getDisplayHeight()/4) d_y *= -1;  // 돌아오기
     }
 
     @Override
@@ -138,14 +138,15 @@ class BossPattern3 implements IBossState{
     }
 
     @Override
-    public void Reset() {
+    public void Reset() {  // 보스 양쪽으로 움직이기.
         LastRegenEnemy = System.currentTimeMillis( );
         attackTime = 0;
         boss.SetSpeed(4.0f);
     }
 
     @Override
-    public boolean isChangeTime() {
+    public boolean isChangeTime() {  // 보스패턴 바꿀 타이밍.
+
         if(System.currentTimeMillis( ) > LastRegenEnemy + 3000) return true;
         return false;
     }
@@ -153,13 +154,13 @@ class BossPattern3 implements IBossState{
     @Override
     public void Attack() {
 
-        boss.movePosition(d_x, 0);
-        if(boss.getX() <=0 || boss.getX() + boss.getBitmapWidth() > AppManager.getInstance().getDisplayWidth() ) d_x *= -1;
+        boss.movePosition(d_x, 0);  // 보스 이동
+        if(boss.getX() <=0 || boss.getX() + boss.getBitmapWidth() > AppManager.getInstance().getDisplayWidth() ) d_x *= -1;  // 이동 방향 반대로
 
     }
 
     @Override
-    public IBossState GetAnotherState() {
+    public IBossState GetAnotherState() {  //다음 패턴
         if(AppManager.getInstance().bossState2 == null)
             AppManager.getInstance().bossState2 = new BossPattern2(boss);
         AppManager.getInstance().bossState2.Reset();

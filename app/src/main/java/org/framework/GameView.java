@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import org.totoroshootinggame.R;
 import org.totoroshootinggame.State.EndingState;
 import org.totoroshootinggame.State.BossState;
 import org.totoroshootinggame.State.GameState;
@@ -24,6 +25,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // 뷰, 컨텍스트 AppManager에 전달
         AppManager.getInstance().setGameView(this);
         AppManager.getInstance().setResources(getResources());
+        AppManager.getInstance().bossState1 = null;
+        AppManager.getInstance().bossState2 = null;
+        AppManager.getInstance().bossState3 = null;
 
         // State 지정
         state = new GameState();
@@ -74,6 +78,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(endTurn)
         {
             changeGameState(new EndingState());
+            gameStartTime = System.currentTimeMillis();
             endTurn = false;
         }
 
@@ -126,6 +131,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void finishActivity()
     {
         GameActivity gameActivity = (GameActivity)this.getContext();
+        SoundManager.getInstance().release();
+        SoundManager.getInstance().playBackground(AppManager.getInstance().introActivity,R.raw.background1);
         gameActivity.finish();
     }
 }

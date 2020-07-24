@@ -2,7 +2,9 @@ package org.totoroshootinggame.GameObject;
 
 import android.graphics.Bitmap;
 
+import org.framework.AppManager;
 import org.totoroshootinggame.Enemy.Enemy;
+import org.totoroshootinggame.R;
 
 public class Item extends Enemy {
 
@@ -13,10 +15,29 @@ public class Item extends Enemy {
 
     int itemType;
 
-    public Item(Bitmap bitmap, int itemNumber) {
-        super(Bitmap.createScaledBitmap(bitmap,160,130,true));
-        movetype = Enemy.MOVE_PATTERN_1;
-        itemType = itemNumber;
+    private Bitmap item1Image = AppManager.getInstance().getBitmap(R.drawable.item1);
+    private Bitmap item2Image = AppManager.getInstance().getBitmap(R.drawable.item2);
+    private Bitmap item3Image = AppManager.getInstance().getBitmap(R.drawable.item3);
+    private Bitmap item4Image = AppManager.getInstance().getBitmap(R.drawable.item7);
+
+    public Item(int itemType) {
+        super( null);
+        switch (itemType){
+            case 0:
+                m_bitmap = Bitmap.createScaledBitmap(item1Image,160,130,true);
+                break;
+            case 1:
+                m_bitmap = Bitmap.createScaledBitmap(item2Image,130,170,true);
+                break;
+            case 2:
+                m_bitmap = Bitmap.createScaledBitmap(item3Image,170,140,true);
+                break;
+            case 3:
+                m_bitmap = Bitmap.createScaledBitmap(item4Image,160,100,true);
+                break;
+        }
+        this.itemType = itemType;
+        movetype = Enemy.MOVE_PATTERN_1;  // 움직이는 패턴 아래로
         speed = 4f;
     }
 

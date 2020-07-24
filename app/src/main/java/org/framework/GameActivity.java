@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
+import org.totoroshootinggame.R;
+
 public class GameActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor sensor;
@@ -38,6 +40,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onBackPressed() {
+        SoundManager.getInstance().playSoundEffect(this, R.raw.effect1, 1);
         Intent intent = new Intent(this, PopUpActivity.class);
         startActivityForResult(intent, 1);
     }
@@ -55,7 +58,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     protected void onPause() {
         super.onPause();
 
-        // 쓰레드 멈
+        // 쓰레드 멈춤
         AppManager.getInstance().getGameView().stopGameViewThread();
 
         // 리스너 해제

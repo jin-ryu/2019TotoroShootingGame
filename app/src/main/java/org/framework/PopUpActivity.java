@@ -25,16 +25,21 @@ public class PopUpActivity extends Activity {
         //타이틀바 없애기
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup);
+
+        SoundManager.getInstance().pause();
     }
 
     public void yesPressed(View view){
+        SoundManager.getInstance().playSoundEffect(this,R.raw.effect1, 1);
         finish();   // 액티비티(팝업) 닫기
+        SoundManager.getInstance().start();
         AppManager.getInstance().getGameView().runGameViewThread();
     }
 
     public void noPressed(View view){
         finish();   // 액티비티(팝업) 닫기
-        System.exit(0);  // 프로그램 종료
+        System.exit(0);
+        SoundManager.getInstance().playSoundEffect(this,R.raw.effect1, 1);
     }
 
     @Override

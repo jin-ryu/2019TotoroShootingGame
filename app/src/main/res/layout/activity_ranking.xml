@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="210dp"
         android:layout_marginBottom="106dp"
-        android:text="1위"
+        android:text="-"
         android:textColor="#FCFAFA"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -23,11 +23,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/score1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/Rank2"

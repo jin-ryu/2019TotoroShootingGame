@@ -14,6 +14,9 @@ import org.totoroshootinggame.Player.Player;
 import org.totoroshootinggame.State.GameState;
 
 public class AppManager {
+
+    public IntroActivity introActivity;
+
     private GameView m_gameView;    // main gameView
     private Resources m_resources;  // main gameView의 resource
     private WindowManager m_windowManager;

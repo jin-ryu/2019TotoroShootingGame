@@ -14,7 +14,7 @@ public class Enemy_2 extends Enemy {
     public Enemy_2( ) {
         super (Bitmap.createScaledBitmap(AppManager.getInstance( ).getBitmap(R.drawable. enemy3),160,130,true));
         hp = 20;
-        speed = 4f;
+        speed = 8f;
         enemyType = 2;
 
         movetype = Enemy.MOVE_PATTERN_2;

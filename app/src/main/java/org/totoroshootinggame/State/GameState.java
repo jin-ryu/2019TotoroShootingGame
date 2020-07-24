@@ -10,6 +10,7 @@ import org.DB.RankingDAO;
 import org.framework.AppManager;
 import org.framework.GraphicObject;
 import org.framework.IState;
+import org.framework.SoundManager;
 import org.totoroshootinggame.GameObject.BackGround;
 import org.totoroshootinggame.GameObject.CloudLayer;
 import org.totoroshootinggame.CollisionManager;
@@ -26,6 +27,7 @@ import org.totoroshootinggame.R;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameState implements IState {
 
@@ -33,10 +35,10 @@ public class GameState implements IState {
     protected Player player;
     protected CloudLayer cloudLayer;
 
-    public ArrayList<Missile> m_pmslist = new ArrayList<Missile>();  // 미사일 리스트
-    public ArrayList<Enemy> m_enemlist = new ArrayList<Enemy>( );   // 적 리스트
-    public ArrayList<Item> m_itemlist = new ArrayList<Item>();  // 아이템 리스트
-    protected ArrayList<GraphicObject> heartlist = new ArrayList<GraphicObject>();  //***
+    public CopyOnWriteArrayList<Missile> m_pmslist = new CopyOnWriteArrayList<Missile>();  // 미사일 리스트
+    public CopyOnWriteArrayList<Enemy> m_enemlist = new CopyOnWriteArrayList<Enemy>( );   // 적 리스트
+    public CopyOnWriteArrayList<Item> m_itemlist = new CopyOnWriteArrayList<Item>();  // 아이템 리스트
+    protected CopyOnWriteArrayList<GraphicObject> heartlist = new CopyOnWriteArrayList<GraphicObject>();  //***
 
     protected long LastItemTime = System.currentTimeMillis( );
     protected long LastCloudTime = 0;
@@ -69,26 +71,17 @@ public class GameState implements IState {
         }
     }
 
-    public Item getItem() {
+    public Item getItem() {  //아이템 생성
 
         int itemtype = randEnem.nextInt(4);
-        Item item = null;
-
-        if (itemtype == 0)
-            item = new Item(AppManager.getInstance().getBitmap(R.drawable.item1), 0);
-        else if (itemtype == 1)
-            item = new Item(AppManager.getInstance().getBitmap(R.drawable.item2), 1);
-        else if (itemtype == 2)
-            item = new Item(AppManager.getInstance().getBitmap(R.drawable.item3), 2);
-        else if (itemtype == 3)
-            item = new Item(AppManager.getInstance().getBitmap(R.drawable.item7), 3);  //***
+        Item item = new Item(itemtype);
 
         return item;
     }
 
     public void MakeItem()
     {
-        if (System.currentTimeMillis( ) - LastItemTime >= 3000) {
+        if (System.currentTimeMillis( ) - LastItemTime >= 5000) {
             LastItemTime = System.currentTimeMillis( );
             Item item = getItem();
             item.setPosition( randEnem.nextInt(AppManager.getInstance().getDisplayWidth() - 200) + 10, AppManager.getInstance().topBar);
@@ -105,7 +98,7 @@ public class GameState implements IState {
                         m_pmslist.get(i).m_BoundBox,
                         m_enemlist.get(j).m_BoundBox)) {
 
-                    if(m_enemlist.get(j).getEnemyType() == 3)
+                    if(m_enemlist.get(j).getEnemyType() == 3)  // Enemy3 --> Enemy1 2개 생성
                     {
                         int x = m_enemlist.get(j).getX();
                         int y = m_enemlist.get(j).getY();
@@ -149,10 +142,12 @@ public class GameState implements IState {
                 int itemType = m_itemlist.get(i).getItemType();
                 m_itemlist.remove(i);
                 if(player.playerType() == Item.UNBEATABLE) break;
+                SoundManager.getInstance().playSoundEffect(AppManager.getInstance().getGameView().getContext(),R.raw.effect3, 5);
                 switch (itemType)
                 {
-                    case Item.HEART: player.addLife();
-                        insertHeart(heartlist.size());  //***
+                    case Item.HEART:
+                       if(player.getLife() < 5) insertHeart(heartlist.size());
+                        player.addLife();
                         break;
 
                     case Item.SHIELD:
@@ -179,13 +174,14 @@ public class GameState implements IState {
 
     @Override
     public void Init() {
+        SoundManager.getInstance().playBackground(AppManager.getInstance().getGameView().getContext(),R.raw.background2);
         backGround = new BackGround(0);
         player = new Player();
         cloudLayer = new CloudLayer();
         AppManager.getInstance().player = player;
         AppManager.getInstance().player_state = player;
-        for(int heart = 0 ; heart < player.getLife();heart++) //***
-            insertHeart(heart); //***
+        for(int heart = 0 ; heart < player.getLife();heart++)
+            insertHeart(heart);
 
     }
 
@@ -206,6 +202,7 @@ public class GameState implements IState {
             if (pms.state == Missile.STATE_OUT)
                 m_pmslist.remove(i);
         }
+
         for (int i = m_enemlist .size( )-1; i >= 0; i--) {
             Enemy enem = m_enemlist .get( i );
             enem.Update(gameTime);
@@ -218,10 +215,18 @@ public class GameState implements IState {
             if (item. state == Enemy. STATE_OUT) m_itemlist .remove( i );
         }
 
-        if(player.isChangeType()) {
+        if(player.isChangeType()) {   // 현재 플레이어 타입을 바꿔야하면 바꿈.
+            Player old  = player;
             player = AppManager.getInstance().player;
             AppManager.getInstance().player_state = player;
+
+            if(old.playerType() == Item.SHIELD) {
+                int x = old.getX();
+                int y = old.getY();
+                player.setPosition(x, y);
+            }
         }
+
         MakeEnemy();
         MakeItem();
         CheckCollision( );
@@ -242,8 +247,8 @@ public class GameState implements IState {
             for (Enemy enem : m_enemlist) enem.Draw(canvas);
             for (Item item : m_itemlist) item.Draw(canvas);
             for (GraphicObject heart:heartlist) heart.Draw(canvas);
-            cloudLayer.Draw(canvas);
             player.Draw(canvas);
+            cloudLayer.Draw(canvas);
         }
         else{
             // 구름 백그라운드로 이동
@@ -263,7 +268,7 @@ public class GameState implements IState {
         return false;
     }
 
-    protected void insertHeart(int i)   // 이 함수 전체~
+    protected void insertHeart(int i)   // 상단바.
     {
         GraphicObject heart = new GraphicObject(Bitmap.createScaledBitmap(AppManager.getInstance().getBitmap(R.drawable.item1), 100,AppManager.getInstance().topBar- 10, false));
         heart.setPosition( 5 + 110 * i, 5);

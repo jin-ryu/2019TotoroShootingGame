@@ -6,10 +6,11 @@ import android.view.MotionEvent;
 
 import org.framework.AppManager;
 import org.framework.IState;
+import org.framework.SoundManager;
 import org.framework.SpriteAnimation;
 import org.totoroshootinggame.R;
 
-public class IntermediateSceneState extends SpriteAnimation implements IState {
+public class IntermediateSceneState extends SpriteAnimation implements IState {  //중간
 
     public Bitmap scene = Bitmap.createScaledBitmap(AppManager.getInstance().getBitmap(R.drawable.boss), AppManager.getInstance().getDisplayWidth()*4, AppManager.getInstance().getDisplayHeight(), false);
 
@@ -21,7 +22,7 @@ public class IntermediateSceneState extends SpriteAnimation implements IState {
 
     @Override
     public void Init() {
-
+        SoundManager.getInstance().release();
     }
 
     @Override

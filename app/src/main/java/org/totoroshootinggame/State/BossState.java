@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import org.DB.RankingDAO;
 import org.framework.AppManager;
 import org.framework.GraphicObject;
+import org.framework.SoundManager;
 import org.totoroshootinggame.GameObject.BackGround;
 import org.totoroshootinggame.GameObject.CloudLayer;
 import org.totoroshootinggame.CollisionManager;
@@ -25,6 +26,7 @@ public class BossState extends GameState {
 
     @Override
     public void Init() {
+        SoundManager.getInstance().playBackground(AppManager.getInstance().getGameView().getContext(),R.raw.background3);
         backGround = new BackGround(1);
         boss = new Boss(AppManager.getInstance( ).getBitmap(R.drawable.boss1));
         player = AppManager.getInstance().player;
@@ -55,9 +57,10 @@ public class BossState extends GameState {
             for (Enemy enem : m_enemlist) enem.Draw(canvas);
             for (Item item : m_itemlist) item.Draw(canvas);
             for (GraphicObject heart:heartlist) heart.Draw(canvas);
-            cloudLayer.Draw(canvas);
             player.Draw(canvas);
             boss.Draw(canvas);
+            cloudLayer.Draw(canvas);
+
         }
         else{
             // 구름 백그라운드로 이동
@@ -67,13 +70,13 @@ public class BossState extends GameState {
             for (Enemy enem : m_enemlist) enem.Draw(canvas);
             for (Item item : m_itemlist) item.Draw(canvas);
             for (GraphicObject heart:heartlist) heart.Draw(canvas);
-            boss.Draw(canvas);
             player.Draw(canvas);
+            boss.Draw(canvas);
         }
     }
 
     @Override
-    public void MakeItem() {
+    public void MakeItem() {  // 아이템 생성
         if (System.currentTimeMillis( ) - LastItemTime >= 3000) {
             LastItemTime = System.currentTimeMillis( );
             Item item = getItem();
@@ -85,7 +88,7 @@ public class BossState extends GameState {
     @Override
     public void CheckCollision() {
         super.CheckCollision();
-        if (CollisionManager.CheckBoxToBox(player.m_BoundBox, boss.m_BoundBox)) {
+        if (CollisionManager.CheckBoxToBox(player.m_BoundBox, boss.m_BoundBox)) {  //보스 충돌
             if(player .destroyPlayer( )) heartlist.remove(heartlist.size() - 1);   //***
             if(player.playerType() == Item.STATE_NORMAL) vibrator.vibrate(100);
             if ( player.getLife( ) <= 0 )
@@ -95,15 +98,17 @@ public class BossState extends GameState {
             }
         }
 
-        for (int i = m_pmslist.size() - 1; i >= 0; i--)
+        for (int i = m_pmslist.size() - 1; i >= 0; i--)  //미사일 <-> 보스 충돌
         {
             if (CollisionManager.CheckBoxToBox(m_pmslist.get(i).m_BoundBox , boss.m_BoundBox))
             {
                 m_pmslist.remove(i);
                 boss.destroyBoss();
                 player.addPoint();
-                if(boss.getBossHp() == 0)
+                if(boss.getBossHp() == 0) {
+                    RankingDAO.getInstance(AppManager.getInstance().getGameView().getContext()).insert(player.getPoint());  // 여기 추가해줌
                     AppManager.getInstance().getGameView().endTurn = true;
+                }
             }
         }
 

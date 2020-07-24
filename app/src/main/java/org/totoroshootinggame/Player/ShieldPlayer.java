@@ -26,7 +26,7 @@ public class ShieldPlayer extends Player  {
     }
 
     @Override
-    public boolean isChangeType() {
+    public boolean isChangeType() {  // 현재 타입 반환
         if(System.currentTimeMillis( ) > ChangeTime + 3000) return true;
         return false;
     }
@@ -34,20 +34,11 @@ public class ShieldPlayer extends Player  {
     @Override
     public int playerType() {
         return Item.SHIELD;
-    }
+    }  //플레이어 타입
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        float roll = sensorEvent.values[2];
-        int rightBound  = AppManager.getInstance().getDisplayWidth() - m_bitmap.getWidth();
-        int leftBound = 0;
-
-        if (roll > 10 && m_x - 15 > leftBound) {
-            setPosition(m_x - 15, m_y); // 왼쪽 이동
-        } else if(roll < -10 && m_x + 15 < rightBound){
-            setPosition(m_x + 15, m_y); // 오른쪽 이동
-        }
-        Log.d("자이로 실드", m_x + " " + m_y);
+      super.onSensorChanged(sensorEvent);
     }
 
     @Override
