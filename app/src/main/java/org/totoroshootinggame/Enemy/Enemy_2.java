@@ -12,7 +12,7 @@ public class Enemy_2 extends Enemy {
     }
 
     public Enemy_2( ) {
-        super (Bitmap.createScaledBitmap(AppManager.getInstance( ).getBitmap(R.drawable. enemy2),160,130,true));
+        super (Bitmap.createScaledBitmap(AppManager.getInstance( ).getBitmap(R.drawable. enemy3),160,130,true));
         hp = 20;
         speed = 4f;
         enemyType = 2;

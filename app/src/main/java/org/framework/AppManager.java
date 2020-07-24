@@ -1,5 +1,6 @@
 package org.framework;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,10 +10,10 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import org.totoroshootinggame.Enemy.IBossState;
+import org.totoroshootinggame.Player.Player;
 import org.totoroshootinggame.State.GameState;
 
 public class AppManager {
-
     private GameView m_gameView;    // main gameView
     private Resources m_resources;  // main gameView의 resource
     private WindowManager m_windowManager;
@@ -24,8 +25,15 @@ public class AppManager {
 
     public GameState m_gameState;
 
-    public IBossState bossState1;
-    public IBossState bossState2;
+    public IBossState bossState1 = null;
+    public IBossState bossState2 = null;
+    public IBossState bossState3 = null;
+
+    public Player player = null;
+    public Player player_state = null;
+
+    public int topBar = 100;
+
 
     public WindowManager getWindowManager() {
         return m_windowManager;

@@ -1,4 +1,4 @@
-package org.totoroshootinggame;
+package org.totoroshootinggame.GameObject;
 
 import android.graphics.Bitmap;
 
@@ -8,7 +8,7 @@ public class Item extends Enemy {
 
     public static final int HEART = 0;
     public static final int SHIELD = 1;
-    public static final int POWER = 2;
+    public static final int UNBEATABLE = 2;
     public static final int CLOUD = 3;
 
     int itemType;

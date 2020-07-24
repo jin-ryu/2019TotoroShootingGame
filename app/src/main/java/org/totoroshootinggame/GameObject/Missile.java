@@ -1,10 +1,12 @@
-package org.totoroshootinggame;
+package org.totoroshootinggame.GameObject;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.util.Log;
 
 import org.framework.AppManager;
 import org.framework.GraphicObject;
+import org.totoroshootinggame.R;
 
 public class Missile extends GraphicObject {
     public static final int STATE_NORMAL= 0;
@@ -20,9 +22,10 @@ public class Missile extends GraphicObject {
     }
 
     public void Update(){
-        m_y -= 5;
-        if( m_y < 50 )
-            state= STATE_OUT;
+        m_y -= 10;
+        if( m_y < 50 ) {
+            state = STATE_OUT;
+        }
 
         // 충돌 박스 값 변경
         m_BoundBox.set(m_x, m_y, m_x+this.getBitmapWidth(), m_y+this.getBitmapHeight());
